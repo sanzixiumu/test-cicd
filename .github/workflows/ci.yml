@@ -20,18 +20,18 @@ jobs:
       # 检出代码
       - uses: actions/checkout@v4
       
-      # 设置 Node.js 环境
+      # 1. 先设置 pnpm
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          
+      # 2. 然后设置 Node.js (现在可以使用 pnpm 缓存了)
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
           cache: pnpm
-          
-      # 设置 pnpm
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
           
       # 安装依赖
       - name: Install dependencies
@@ -44,9 +44,16 @@ jobs:
   typecheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      
+      # 同样修改 typecheck job 中的步骤顺序
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: lts/*
           cache: pnpm
