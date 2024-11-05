@@ -24,7 +24,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: lts/*
+          cache: pnpm
           
       # 设置 pnpm
       - name: Setup pnpm
@@ -39,7 +40,19 @@ jobs:
       # 运行代码检查
       - name: Lint
         run: pnpm run lint
-        
-      # 运行类型检查
-      - name: Type check
+
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install
+
+      - name: Typecheck
         run: pnpm run typecheck
